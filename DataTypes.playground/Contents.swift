@@ -20,3 +20,8 @@ print(type(of: intScore))
 print(type(of: doubleScore))
 print(type(of: message))
 print(type(of: selected))
+
+// 初期値を代入せずに型の宣言のみをする方法
+// let 定数名: データ型
+// var 変数名: データ型
+// 定数・変数は初期値が代入されてはじめて利用可能
