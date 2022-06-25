@@ -4,5 +4,6 @@
         <page name='for-in stride文 '/>
         <page name='for-in文'/>
         <page name='while文'/>
+        <page name='forEach文'/>
     </pages>
 </playground>
