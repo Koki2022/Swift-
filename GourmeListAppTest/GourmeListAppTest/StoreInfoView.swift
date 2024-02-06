@@ -103,13 +103,8 @@ struct StoreInfoView: View {
         }
         // 編集ボタン押した際の設定
         .confirmationDialog("", isPresented: $storeInfoConfirmationDialog) {
-            Button(action: {
-                // お店情報を編集するボタンをタップした際の処理
-                // storeEditIsShowSheetをtrueにする
-                storeEditIsShowSheet.toggle()
-            }) {
-                Text("お店情報を編集する")
-            }
+            // お店情報編集画面へナビゲーション遷移
+            NavigationLink("お店情報を編集する", destination: StoreEditView())
             Button(action: {
                 // 削除するボタンをタップしたらstoreInfoIsShowAlertの状態をtrueにする
                 storeInfoIsShowAlert.toggle()

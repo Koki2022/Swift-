@@ -5,6 +5,11 @@
 //  Created by 高橋昴希 on 2023/12/20.
 //
 
+
+// Run実行時にSandbox: ... deny(1) file-read-data エラー
+// Podfile.lockにデフォルトでアクセスできない(Build PhaseのCheck Pod欄に情報あり)
+// Build Settings の User Script Sandboxing を No にするとエラー解決
+
 import SwiftUI
 
 //　HomeView:お店一覧画面(ホーム画面)
@@ -79,6 +84,17 @@ struct HomeView: View {
                         .fontWeight(.heavy)
                 }
             }
+        }
+        // タグ選択画面を表示する際の設定
+        .sheet(isPresented: $tagSelectIsShowSheet) {
+            // タグ選択画面を表示
+            TagSelectView()
+            // ハーフモーダルで表示
+                .presentationDetents([.medium])
+        }
+        // お店検索画面をフルスクリーンモーダルシートに設定
+        .fullScreenCover(isPresented: $storeSearchIsShowFullScreenCover) {
+            StoreSearchView()
         }
     }
 }
