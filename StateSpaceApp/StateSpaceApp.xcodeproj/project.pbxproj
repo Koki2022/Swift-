@@ -8,18 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		03E8CD172B7449BA00029BC0 /* StateSpaceAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E8CD162B7449BA00029BC0 /* StateSpaceAppApp.swift */; };
-		03E8CD192B7449BA00029BC0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E8CD182B7449BA00029BC0 /* ContentView.swift */; };
+		03E8CD192B7449BA00029BC0 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E8CD182B7449BA00029BC0 /* HomeView.swift */; };
 		03E8CD1B2B7449BB00029BC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03E8CD1A2B7449BB00029BC0 /* Assets.xcassets */; };
 		03E8CD1F2B7449BB00029BC0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03E8CD1E2B7449BB00029BC0 /* Preview Assets.xcassets */; };
+		03E8CD282B744A6000029BC0 /* StoreInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E8CD272B744A6000029BC0 /* StoreInfoView.swift */; };
+		03E8CD2A2B744A7C00029BC0 /* StoreEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E8CD292B744A7C00029BC0 /* StoreEditView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		03E8CD132B7449BA00029BC0 /* StateSpaceApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StateSpaceApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03E8CD162B7449BA00029BC0 /* StateSpaceAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateSpaceAppApp.swift; sourceTree = "<group>"; };
-		03E8CD182B7449BA00029BC0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		03E8CD182B7449BA00029BC0 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		03E8CD1A2B7449BB00029BC0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		03E8CD1C2B7449BB00029BC0 /* StateSpaceApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StateSpaceApp.entitlements; sourceTree = "<group>"; };
 		03E8CD1E2B7449BB00029BC0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		03E8CD272B744A6000029BC0 /* StoreInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreInfoView.swift; sourceTree = "<group>"; };
+		03E8CD292B744A7C00029BC0 /* StoreEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreEditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +57,9 @@
 			isa = PBXGroup;
 			children = (
 				03E8CD162B7449BA00029BC0 /* StateSpaceAppApp.swift */,
-				03E8CD182B7449BA00029BC0 /* ContentView.swift */,
+				03E8CD182B7449BA00029BC0 /* HomeView.swift */,
+				03E8CD272B744A6000029BC0 /* StoreInfoView.swift */,
+				03E8CD292B744A7C00029BC0 /* StoreEditView.swift */,
 				03E8CD1A2B7449BB00029BC0 /* Assets.xcassets */,
 				03E8CD1C2B7449BB00029BC0 /* StateSpaceApp.entitlements */,
 				03E8CD1D2B7449BB00029BC0 /* Preview Content */,
@@ -139,7 +145,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03E8CD192B7449BA00029BC0 /* ContentView.swift in Sources */,
+				03E8CD2A2B744A7C00029BC0 /* StoreEditView.swift in Sources */,
+				03E8CD282B744A6000029BC0 /* StoreInfoView.swift in Sources */,
+				03E8CD192B7449BA00029BC0 /* HomeView.swift in Sources */,
 				03E8CD172B7449BA00029BC0 /* StateSpaceAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
