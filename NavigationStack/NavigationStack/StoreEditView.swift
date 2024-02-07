@@ -11,8 +11,8 @@ struct StoreEditView: View {
     @Binding var navigatePath: [samplePath]
     var body: some View {
         Button(action: {
-            // 最初のビューに戻る(タップしたらホーム画面)
-            navigatePath.removeLast(navigatePath.count)
+            // 最初のビューに戻る(タップしたらホーム画面) = 配列のすべての要素を削除
+            navigatePath.removeAll()
         }) {
             Text("ホーム画面に戻る")
         }

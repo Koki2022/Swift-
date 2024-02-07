@@ -22,6 +22,7 @@ struct HomeView: View {
                         navigatePath.append(.storeInfo)
                     }) {
                         Text("ダミー")
+                            .foregroundStyle(.black)
                     }
                 }
             }
