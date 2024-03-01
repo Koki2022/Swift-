@@ -1,14 +1,14 @@
 //
-//  TextFieldTestApp.swift
-//  TextFieldTest
+//  SearchBarTestApp.swift
+//  SearchBarTest
 //
-//  Created by 高橋昴希 on 2024/02/29.
+//  Created by 高橋昴希 on 2024/03/02.
 //
 
 import SwiftUI
 
 @main
-struct TextFieldTestApp: App {
+struct SearchBarTestApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
