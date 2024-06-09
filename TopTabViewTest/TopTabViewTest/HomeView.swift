@@ -15,9 +15,8 @@ struct HomeView: View {
     
     var body: some View {
         VStack {
-            // 横線
-            Divider()
             // 上部タブView
+            TopTabView(tabName: tabName, selectedTab: $selectedTab)
             // ビュー本体
             TabView(selection: $selectedTab) {
                 // 行ったお店のView
@@ -27,6 +26,8 @@ struct HomeView: View {
                 FutureHomeView()
                     .tag(1)
             }
+            // この設定をすると検索バーが消える
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         }
     }
 }

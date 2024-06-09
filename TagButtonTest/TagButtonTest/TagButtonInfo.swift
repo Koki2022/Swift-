@@ -7,7 +7,6 @@
 
 import Foundation
 
-// FoeEach文での処理時にHashableに準拠する必要あり
-struct TagButtonInfo: Hashable {
+struct TagButtonInfo {
     var isShown: Bool = false
 }

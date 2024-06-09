@@ -11,10 +11,7 @@ import SwiftUI
 struct TagSelectView: View {
     //　入力した文字を格納する変数
     @State private var inputTextTagSelectHomeView: String = ""
-    // タグボタンの状態を管理する変数
-    @State var isHomeTagButtonShown: Bool = false
-    // タグボタンの状態を管理する配列
-    // タグ名ごとに選択状態を管理するので構造体で管理
+    // タグボタンの状態を管理する配列。タグ名ごとに選択状態を管理するので構造体で管理
     @State private var isShownTagButton: [TagButtonInfo] = Array(repeating: TagButtonInfo(), count: 100)
     // タグボタンのサイズや行または列の要素数をArray文で定義
     private let columns: [GridItem] = Array(Array(repeating: .init(.fixed(120)), count: 3))
@@ -73,7 +70,6 @@ struct TagSelectView: View {
                                 .padding(10)
                         }
                         // ボタンを長押しした際の挙動
-                        //　削除などの役割が用意されているボタンの場合はそっちを使う?
                         .contextMenu(menuItems: {
                             Button("削除", role: .destructive) {
                                 isShownAlert.toggle()

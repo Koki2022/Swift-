@@ -8,18 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		03C5454D2B98511100C747CA /* TopTabViewTestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5454C2B98511100C747CA /* TopTabViewTestApp.swift */; };
-		03C5454F2B98511100C747CA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5454E2B98511100C747CA /* ContentView.swift */; };
+		03C5454F2B98511100C747CA /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5454E2B98511100C747CA /* HomeView.swift */; };
 		03C545512B98511200C747CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03C545502B98511200C747CA /* Assets.xcassets */; };
 		03C545552B98511200C747CA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03C545542B98511200C747CA /* Preview Assets.xcassets */; };
+		03C5455E2B9855EE00C747CA /* FutureHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5455D2B9855EE00C747CA /* FutureHomeView.swift */; };
+		03C545602B98589000C747CA /* GoneHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5455F2B98589000C747CA /* GoneHomeView.swift */; };
+		03C545622B9859A900C747CA /* TopTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C545612B9859A900C747CA /* TopTabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		03C545492B98511100C747CA /* TopTabViewTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TopTabViewTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03C5454C2B98511100C747CA /* TopTabViewTestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTabViewTestApp.swift; sourceTree = "<group>"; };
-		03C5454E2B98511100C747CA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		03C5454E2B98511100C747CA /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		03C545502B98511200C747CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		03C545522B98511200C747CA /* TopTabViewTest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TopTabViewTest.entitlements; sourceTree = "<group>"; };
 		03C545542B98511200C747CA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		03C5455D2B9855EE00C747CA /* FutureHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureHomeView.swift; sourceTree = "<group>"; };
+		03C5455F2B98589000C747CA /* GoneHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoneHomeView.swift; sourceTree = "<group>"; };
+		03C545612B9859A900C747CA /* TopTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +59,10 @@
 			isa = PBXGroup;
 			children = (
 				03C5454C2B98511100C747CA /* TopTabViewTestApp.swift */,
-				03C5454E2B98511100C747CA /* ContentView.swift */,
+				03C5454E2B98511100C747CA /* HomeView.swift */,
+				03C545612B9859A900C747CA /* TopTabView.swift */,
+				03C5455D2B9855EE00C747CA /* FutureHomeView.swift */,
+				03C5455F2B98589000C747CA /* GoneHomeView.swift */,
 				03C545502B98511200C747CA /* Assets.xcassets */,
 				03C545522B98511200C747CA /* TopTabViewTest.entitlements */,
 				03C545532B98511200C747CA /* Preview Content */,
@@ -139,8 +148,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03C5454F2B98511100C747CA /* ContentView.swift in Sources */,
+				03C545622B9859A900C747CA /* TopTabView.swift in Sources */,
+				03C5454F2B98511100C747CA /* HomeView.swift in Sources */,
 				03C5454D2B98511100C747CA /* TopTabViewTestApp.swift in Sources */,
+				03C545602B98589000C747CA /* GoneHomeView.swift in Sources */,
+				03C5455E2B9855EE00C747CA /* FutureHomeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
