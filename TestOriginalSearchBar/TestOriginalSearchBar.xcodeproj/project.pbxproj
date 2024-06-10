@@ -8,18 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		03C810192C15D8590033168F /* TestOriginalSearchBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C810182C15D8590033168F /* TestOriginalSearchBarApp.swift */; };
-		03C8101B2C15D8590033168F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C8101A2C15D8590033168F /* ContentView.swift */; };
+		03C8101B2C15D8590033168F /* FirstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C8101A2C15D8590033168F /* FirstView.swift */; };
 		03C8101D2C15D85A0033168F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03C8101C2C15D85A0033168F /* Assets.xcassets */; };
 		03C810212C15D85A0033168F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03C810202C15D85A0033168F /* Preview Assets.xcassets */; };
+		03C810282C15D88C0033168F /* OriginalSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C810272C15D88C0033168F /* OriginalSearchBarView.swift */; };
+		03C8102A2C15DEE70033168F /* SecoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C810292C15DEE70033168F /* SecoundView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		03C810152C15D8590033168F /* TestOriginalSearchBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestOriginalSearchBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03C810182C15D8590033168F /* TestOriginalSearchBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestOriginalSearchBarApp.swift; sourceTree = "<group>"; };
-		03C8101A2C15D8590033168F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		03C8101A2C15D8590033168F /* FirstView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstView.swift; sourceTree = "<group>"; };
 		03C8101C2C15D85A0033168F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		03C8101E2C15D85A0033168F /* TestOriginalSearchBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestOriginalSearchBar.entitlements; sourceTree = "<group>"; };
 		03C810202C15D85A0033168F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		03C810272C15D88C0033168F /* OriginalSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginalSearchBarView.swift; sourceTree = "<group>"; };
+		03C810292C15DEE70033168F /* SecoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecoundView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +57,9 @@
 			isa = PBXGroup;
 			children = (
 				03C810182C15D8590033168F /* TestOriginalSearchBarApp.swift */,
-				03C8101A2C15D8590033168F /* ContentView.swift */,
+				03C8101A2C15D8590033168F /* FirstView.swift */,
+				03C810292C15DEE70033168F /* SecoundView.swift */,
+				03C810272C15D88C0033168F /* OriginalSearchBarView.swift */,
 				03C8101C2C15D85A0033168F /* Assets.xcassets */,
 				03C8101E2C15D85A0033168F /* TestOriginalSearchBar.entitlements */,
 				03C8101F2C15D85A0033168F /* Preview Content */,
@@ -139,7 +145,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03C8101B2C15D8590033168F /* ContentView.swift in Sources */,
+				03C8102A2C15DEE70033168F /* SecoundView.swift in Sources */,
+				03C8101B2C15D8590033168F /* FirstView.swift in Sources */,
+				03C810282C15D88C0033168F /* OriginalSearchBarView.swift in Sources */,
 				03C810192C15D8590033168F /* TestOriginalSearchBarApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

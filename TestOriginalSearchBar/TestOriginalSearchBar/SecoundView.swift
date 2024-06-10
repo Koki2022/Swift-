@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct SecoundView: View {
+    @State private var searchText: String = ""
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        OriginalSearchBarView(text: $searchText, prompt: "アイテムを検索")
     }
 }
 
