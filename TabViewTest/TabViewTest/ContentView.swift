@@ -30,6 +30,7 @@ struct ContentView: View {
         }
         // スライド表示スタイル
         .tabViewStyle(.page)
+        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
     }
 }
 
