@@ -20,11 +20,14 @@ struct ContentView: View {
                     print(photos.indices) // 0..<2
                     print(index) // cymbal:0 guitar:1
                 }) {
+                    
                     // 画像表示
                     Image(photos[index])
                         .resizable()
                         .scaledToFit()
+                        .frame(maxHeight: .infinity)
                         .tag(index)
+                        .background(.red)
                 }
             }
         }
