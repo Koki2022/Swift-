@@ -43,7 +43,8 @@ struct ContentView: View {
                         .padding([.leading, .trailing], 5)
                 }
                 // onChangeでPhotosPickerItem型プロパティを監視
-                .onChange(of: selectedItems) { items in
+                // onChange(of:perform:)非推奨、onChange(of:initial:_:)で0か２つの入力パラメータを用意
+                .onChange(of: selectedItems) { selectedItems, items in
                     // 非同期処理
                     Task {
                         selectedImages = []
