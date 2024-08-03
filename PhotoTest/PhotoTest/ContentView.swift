@@ -44,7 +44,7 @@ struct ContentView: View {
                 }
                 // onChangeでPhotosPickerItem型プロパティを監視
                 // onChange(of:perform:)非推奨、onChange(of:initial:_:)で0か２つの入力パラメータを用意
-                .onChange(of: selectedItems) { selectedItems, items in
+                .onChange(of: selectedItems) { _, items in
                     // 非同期処理
                     Task {
                         selectedImages = []
@@ -52,10 +52,43 @@ struct ContentView: View {
                             guard let data = try await item.loadTransferable(type: Data.self) else { continue }
                             guard let uiImage = UIImage(data: data) else { continue }
                             selectedImages.append(uiImage)
+                            
+                            // 取り出した画像のデータが存在すれば、ファイル名を出力
+                            if let fileName = saveImageAndGetPath(image: uiImage) {
+                                print("画像が保存されました。ファイル名: \(fileName)")
+                            } else {
+                                print("画像の保存に失敗しました")
+                            }
                         }
+                       
                     }
                 }
             }
+        }
+    }
+    func saveImageAndGetPath(image: UIImage) -> String? {
+        // UUIDを生成してファイル名に使用
+        let uuid = UUID().uuidString
+        let fileName = "\(uuid).png"
+        
+        // 画像をPNGデータに変換
+        guard let data = image.pngData() else { return nil }
+        
+        // ドキュメントディレクトリのURLを取得
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        
+        // 保存するファイルのフルパスを作成
+        let fileURL = documentsDirectory?.appendingPathComponent(fileName)
+        
+        do {
+            // データをファイルに書き込む
+            try data.write(to: fileURL!)
+            
+            // 保存したファイルのパスを返す
+            return fileName
+        } catch {
+            print("画像の保存に失敗しました: \(error)")
+            return nil
         }
     }
 }
