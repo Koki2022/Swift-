@@ -28,7 +28,7 @@ struct ContentView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(fetchedPhotos) { photo in
-                        // 意図しないデータが表示される
+                        // 意図しないデータが表示される.
                         if let unwrappedFileName = photo.fileName?.components(separatedBy: ",") {
                             let _ = print("Retrieved from CoreData: \(unwrappedFileName)")
                             shouldDisplayImage(for: unwrappedFileName)
