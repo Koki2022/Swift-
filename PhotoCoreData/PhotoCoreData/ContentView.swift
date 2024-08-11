@@ -27,10 +27,17 @@ struct ContentView: View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
+                    // Photosエンティティのfilanameアトリビュートへアクセス
+                                       ForEach(fetchedPhotos) { photo in
+                                           // 文字列で結合されているfilenameをカンマ区切りで分解
+                                           if let unwrappedFileName = photo.fileName?.components(separatedBy: ",") {
+                                               let _ = print("CoreData: \(unwrappedFileName)")
+                                               // 画面表示の際にCoreDataに保存したファイル名からUIImageを読み込む処理を実行
+                                               // loadImage関数の引数に代入
+                                           }
+                                       }
                     // 配列内に画像が存在すれば表示
                     if !selectedImages.isEmpty {
-                        
-                        
                         // 選択された画像を表示
                         ForEach(selectedImages, id: \.self) { image in
                             PhotosPicker(selection: $selectedItems, selectionBehavior: .ordered) {
