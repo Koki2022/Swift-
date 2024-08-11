@@ -27,13 +27,11 @@ struct ContentView: View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    // Photosエンティティのfilanameアトリビュートへアクセス
                     ForEach(fetchedPhotos) { photo in
-                        // 文字列で結合されているfilenameをカンマ区切りで分解
+                        // 意図しないデータが表示される
                         if let unwrappedFileName = photo.fileName?.components(separatedBy: ",") {
-                            let _ = print("CoreData: \(unwrappedFileName)")
-                            // 画面表示の際にCoreDataに保存したファイル名からUIImageを読み込む処理を実行
-                            // loadImage関数の引数に代入
+                            let _ = print("Retrieved from CoreData: \(unwrappedFileName)")
+                            shouldDisplayImage(for: unwrappedFileName)
                         }
                     }
                     // 配列内に画像が存在すれば表示
@@ -103,7 +101,8 @@ struct ContentView: View {
         // 生成したインスタンスをCoreDataに保存する
         do {
             try viewContext.save()
-            print("保存完了: \((photos.fileName ?? ""))")
+            // コアデータにデータを保存するときのログ
+            print("保存完了: \(fileNameString)")
         } catch {
             print("ERROR \(error)")
         }
@@ -128,13 +127,11 @@ struct ContentView: View {
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
         
         do {
-            // データをファイルに書き込む
             try data.write(to: fileURL)
-            
-            // 保存したファイル名を返す
+            print("Image saved successfully: \(fileName)") // Log successful save
             return fileName
         } catch {
-            print("画像の保存に失敗しました: \(error)")
+            print("Failed to save image: \(error)") // Log save failure
             return nil
         }
     }
@@ -149,7 +146,11 @@ struct ContentView: View {
         
         return nil
     }
-    
+    // データのフィルタリングを確認する関数
+    func shouldDisplayImage(for fileName: String) -> Bool {
+        // 選択したファイル名が含まれているか確認する
+        return arrayFileNames.contains(fileName)
+    }
 }
 
 #Preview {
