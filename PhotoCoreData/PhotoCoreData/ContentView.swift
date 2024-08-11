@@ -27,13 +27,6 @@ struct ContentView: View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    ForEach(fetchedPhotos) { photo in
-                        // 意図しないデータが表示される.
-                        if let unwrappedFileName = photo.fileName?.components(separatedBy: ",") {
-                            let _ = print("Retrieved from CoreData: \(unwrappedFileName)")
-                            shouldDisplayImage(for: unwrappedFileName)
-                        }
-                    }
                     // 配列内に画像が存在すれば表示
                     if !selectedImages.isEmpty {
                         
