@@ -28,14 +28,23 @@ struct ContentView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     // Photosエンティティのfilanameアトリビュートへアクセス
-                                       ForEach(fetchedPhotos) { photo in
-                                           // 文字列で結合されているfilenameをカンマ区切りで分解
-                                           if let unwrappedFileName = photo.fileName?.components(separatedBy: ",") {
-                                               let _ = print("CoreData: \(unwrappedFileName)")
-                                               // 画面表示の際にCoreDataに保存したファイル名からUIImageを読み込む処理を実行
-                                               // loadImage関数の引数に代入
-                                           }
-                                       }
+                    ForEach(fetchedPhotos) { photo in
+                        if let unwrappedFileName = photo.fileName?.components(separatedBy: ",") {
+                            let _ = print("CoreData: \(unwrappedFileName)")
+                           
+                            for fileName in unwrappedFileName {
+                                // 画面表示の際にCoreDataに保存したファイル名からUIImageを読み込む処理を実行
+                                if let image = loadImage(fileName: fileName) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 150, height: 150)
+                                        .clipped()
+                                        .padding(5)
+                                }
+                            }
+                        }
+                    }
                     // 配列内に画像が存在すれば表示
                     if !selectedImages.isEmpty {
                         // 選択された画像を表示
@@ -146,11 +155,7 @@ struct ContentView: View {
         
         return nil
     }
-    // データのフィルタリングを確認する関数
-    func shouldDisplayImage(for fileName: String) -> Bool {
-        // 選択したファイル名が含まれているか確認する
-        return arrayFileNames.contains(fileName)
-    }
+   
 }
 
 #Preview {
