@@ -20,33 +20,31 @@ struct ContentView: View {
     @State var selectedItems: [PhotosPickerItem] = []
     // PhotosPickerItem -> UIImageに変換した複数のアイテムを格納するプロパティ
     @State var selectedImages: [UIImage] = []
-    //　ファイル名を格納する配列。
-    @State private var arrayFileNames: [String] = []
+    //　ファイル名を格納する配列。テスト用の固定値
+    @State private var arrayFileNames: [String] = ["test1.png", "test2.png", "test3.png"]
+    // アラートの状態を管理
+    @State private var isShowAlert = false
+    // 保存された値
+    @State private var savedValue = ""
     
     var body: some View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    // Photosエンティティのfilanameアトリビュートへアクセス
+                    /* Photosエンティティのfilanameアトリビュートへアクセス
                     ForEach(fetchedPhotos) { photo in
+                        // 文字列で結合されているfilenameをカンマ区切りで分解
                         if let unwrappedFileName = photo.fileName?.components(separatedBy: ",") {
                             let _ = print("CoreData: \(unwrappedFileName)")
-                           
-                            for fileName in unwrappedFileName {
-                                // 画面表示の際にCoreDataに保存したファイル名からUIImageを読み込む処理を実行
-                                if let image = loadImage(fileName: fileName) {
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 150, height: 150)
-                                        .clipped()
-                                        .padding(5)
-                                }
-                            }
+                            // 画面表示の際にCoreDataに保存したファイル名からUIImageを読み込む処理を実行
+                            // loadImage関数の引数に代入
                         }
                     }
+                     */
                     // 配列内に画像が存在すれば表示
                     if !selectedImages.isEmpty {
+                        
+                        
                         // 選択された画像を表示
                         ForEach(selectedImages, id: \.self) { image in
                             PhotosPicker(selection: $selectedItems, selectionBehavior: .ordered) {
@@ -80,12 +78,12 @@ struct ContentView: View {
                                 
                                 // 取り出した写真uiImageを、ファイル名を返す関数の引数に代入し、nilでなければファイル名をfileNameに格納
                                 if let fileName = saveImageAndGetFileName(image: uiImage) {
-                                    print("画像が保存されました。ファイル名: \(fileName)")
+                                    print("UIImageをストレージに保存しました。ファイル名: \(fileName)")
                                     // ファイル名を配列に格納
                                     arrayFileNames.append(fileName)
                                     print(arrayFileNames)
                                 } else {
-                                    print("画像の保存に失敗しました")
+                                    print("UIImageをストレージに保存できませんでした")
                                 }
                             }
                         }
@@ -98,6 +96,11 @@ struct ContentView: View {
                 Text("保存")
             }
         }
+        .alert("保存完了", isPresented: $isShowAlert) {
+            Button("OK") {}
+        } message: {
+            Text("保存された値: \(savedValue)")
+        }
     }
     
     // 追加ボタン押下した際にデータを保存する関数
@@ -105,13 +108,19 @@ struct ContentView: View {
         let photos = Photos(context: viewContext)
         // ファイル名に格納している配列の値を文字列で結合
         let fileNameString = arrayFileNames.joined(separator: ",")
+        // 登録直前のデータ確認
+        print("登録直前のデータ: \(fileNameString)")
         // データを保存
         photos.fileName = fileNameString
         // 生成したインスタンスをCoreDataに保存する
         do {
             try viewContext.save()
-            // コアデータにデータを保存するときのログ
-            print("保存完了: \(fileNameString)")
+            // CoreData登録直後のデータ確認
+            print("CoreData登録直後のデータ: \(photos.fileName ?? "データなし")")
+            // 保存された値を記録
+            savedValue = fileNameString
+            // アラートを表示
+            isShowAlert.toggle()
         } catch {
             print("ERROR \(error)")
         }
@@ -136,11 +145,13 @@ struct ContentView: View {
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
         
         do {
+            // データをファイルに書き込む
             try data.write(to: fileURL)
-            print("Image saved successfully: \(fileName)") // Log successful save
+            
+            // 保存したファイル名を返す
             return fileName
         } catch {
-            print("Failed to save image: \(error)") // Log save failure
+            print("画像の保存に失敗しました: \(error)")
             return nil
         }
     }
@@ -155,7 +166,7 @@ struct ContentView: View {
         
         return nil
     }
-   
+    
 }
 
 #Preview {
