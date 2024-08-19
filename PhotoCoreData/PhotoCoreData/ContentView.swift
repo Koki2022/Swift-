@@ -31,20 +31,16 @@ struct ContentView: View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    /* Photosエンティティのfilanameアトリビュートへアクセス
-                    ForEach(fetchedPhotos) { photo in
-                        // 文字列で結合されているfilenameをカンマ区切りで分解
-                        if let unwrappedFileName = photo.fileName?.components(separatedBy: ",") {
-                            let _ = print("CoreData: \(unwrappedFileName)")
-                            // 画面表示の際にCoreDataに保存したファイル名からUIImageを読み込む処理を実行
-                            // loadImage関数の引数に代入
+                    // CoreDataからファイル名を取得して画像を表示
+                    // CoreDataからPhotosエンティティを取得
+                    ForEach(fetchedPhotos, id: \.self) { photo in
+                        // 各ファイル名を取り出すため、fileNameアトリビュートの値を分解
+                        if let fileNames = photo.fileName?.components(separatedBy: ",") {
+                            let _ = print("CoreDaraから取得したファイル名: \(fileNames)")
                         }
                     }
-                     */
                     // 配列内に画像が存在すれば表示
                     if !selectedImages.isEmpty {
-                        
-                        
                         // 選択された画像を表示
                         ForEach(selectedImages, id: \.self) { image in
                             PhotosPicker(selection: $selectedItems, selectionBehavior: .ordered) {
@@ -101,6 +97,7 @@ struct ContentView: View {
         } message: {
             Text("保存された値: \(savedValue)")
         }
+        .onAppear()
     }
     
     // 追加ボタン押下した際にデータを保存する関数
@@ -155,18 +152,6 @@ struct ContentView: View {
             return nil
         }
     }
-    // ファイル名を取り込みUIImage型のデータを返却する関数
-    func loadImage(fileName: String) -> UIImage? {
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileURL = documentsDirectory.appendingPathComponent(fileName)
-        
-        if let imageData = try? Data(contentsOf: fileURL) {
-            return UIImage(data: imageData)
-        }
-        
-        return nil
-    }
-    
 }
 
 #Preview {
