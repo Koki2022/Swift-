@@ -24,21 +24,11 @@ struct ContentView: View {
     @State private var arrayFileNames: [String] = ["test1.png", "test2.png", "test3.png"]
     // アラートの状態を管理
     @State private var isShowAlert = false
-    // 保存された値
-    @State private var savedValue = ""
     
     var body: some View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    // CoreDataからファイル名を取得して画像を表示
-                    // CoreDataからPhotosエンティティを取得
-                    ForEach(fetchedPhotos, id: \.self) { photo in
-                        // 各ファイル名を取り出すため、fileNameアトリビュートの値を分解
-                        if let fileNames = photo.fileName?.components(separatedBy: ",") {
-                            let _ = print("CoreDaraから取得したファイル名: \(fileNames)")
-                        }
-                    }
                     // 配列内に画像が存在すれば表示
                     if !selectedImages.isEmpty {
                         // 選択された画像を表示
@@ -86,20 +76,50 @@ struct ContentView: View {
                     }
                 }
             }
+            // 保存ボタン
             Button(action: {
                 addPhotosItem()
             }) {
                 Text("保存")
             }
+            // 削除ボタン
+            Button(action: {
+                // アラートを表示
+                isShowAlert.toggle()
+                
+            }) {
+                Text("すべて削除")
+                    .foregroundColor(.red)
+            }
         }
-        .alert("保存完了", isPresented: $isShowAlert) {
-            Button("OK") {}
-        } message: {
-            Text("保存された値: \(savedValue)")
+        // 画面表示時
+        .onAppear {
+            print("画面表示中")
+            // データ件数の確認
+            checkCoreDataContent()
         }
-        .onAppear()
+        .alert("削除しますか？", isPresented: $isShowAlert) {
+            // 削除ボタン
+            Button(action: {
+                deleteAllPhotos() // CoreDataの情報を削除
+                checkCoreDataContent() // 削除後にCore Dataの内容を確認
+            }) {
+                Text("OK")
+            }
+        }
     }
     
+    // Core Dataの内容を確認する関数
+    private func checkCoreDataContent() {
+        // 取得したデータの件数を出力
+        print("取得したデータの件数: \(fetchedPhotos.count)")
+        for photo in fetchedPhotos {
+            // 各ファイル名を取り出すため、fileNameアトリビュートの値を分解
+            if let fileNames = photo.fileName?.components(separatedBy: ",") {
+                let _ = print("CoreDataから取得したファイル名: \(fileNames)")
+            }
+        }
+    }
     // 追加ボタン押下した際にデータを保存する関数
     private func addPhotosItem() {
         let photos = Photos(context: viewContext)
@@ -114,14 +134,41 @@ struct ContentView: View {
             try viewContext.save()
             // CoreData登録直後のデータ確認
             print("CoreData登録直後のデータ: \(photos.fileName ?? "データなし")")
-            // 保存された値を記録
-            savedValue = fileNameString
-            // アラートを表示
-            isShowAlert.toggle()
+            // データ追加後に再度CoreDataの内容を確認
+            checkCoreDataContent()
         } catch {
             print("ERROR \(error)")
         }
     }
+    // CoreDataの内容全削除
+    func deleteAllPhotos() {
+        // 削除するファイル名を格納する配列
+        var deletedFileNames: [String] = []
+        // fetchedPhotos内の各photoインスタンスを格納していく
+        for photo in fetchedPhotos {
+            // photoインスタンスからファイル名を取り出し、削除したファイル名の配列に追加
+            if let fileNames = photo.fileName?.components(separatedBy: ",") {
+                // 削除するファイル名を配列に追加
+                deletedFileNames.append(contentsOf: fileNames)
+            }
+            // ここでphotoインスタンスを削除する
+            viewContext.delete(photo)
+        }
+        
+        do {
+            // 
+            try viewContext.save()
+            // 削除したファイル名を出力
+            if !deletedFileNames.isEmpty {
+                print("削除したファイル名: \(deletedFileNames)")
+            } else {
+                print("削除するファイルはありませんでした")
+            }
+        } catch {
+            fatalError("セーブに失敗: \(error)")
+        }
+    }
+
     // UIImageをストレージに保存し、ファイル名を返す関数
     private func saveImageAndGetFileName(image: UIImage) -> String? {
         // ファイル名の重複を避けるためUUIDを生成してファイル名に使用.
