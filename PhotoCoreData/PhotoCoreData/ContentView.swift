@@ -116,10 +116,8 @@ struct ContentView: View {
             // 生成したUIImage型のデータを配列に格納
             newImages.append(uiImage)
         }
-        // 非同期処理の結果をUIの更新に反映させる
-        DispatchQueue.main.async {
-            self.selectedImages = newImages
-        }
+        // UIImageの配列に格納
+        selectedImages = newImages
     }
     // UIImageをストレージに保存し、ファイル名を返す関数
     private func saveImageAndGetFileName(image: UIImage) -> String? {
@@ -274,8 +272,13 @@ struct ContentView: View {
                 let fileNameToDelete = fileNames[index]
                 // ファイル名を削除
                 fileNames.remove(at: index)
-                // 残ったファイル名を再結合してCore Dataを更新
-                photo.fileName = fileNames.joined(separator: ",")
+                // もしファイル名の配列がからになったらCoreDataのエントリ自体を削除
+                if fileNames.isEmpty {
+                    viewContext.delete(photo)
+                } else {
+                    // 残ったファイル名を再結合してCore Dataを更新
+                    photo.fileName = fileNames.joined(separator: ",")
+                }
                 // ストレージから画像ファイルを削除
                 deleteImageFromDocuments(fileName: fileNameToDelete)
             }
