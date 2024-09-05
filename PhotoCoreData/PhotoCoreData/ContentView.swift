@@ -22,8 +22,10 @@ struct ContentView: View {
     @State var selectedImages: [UIImage] = []
     //　ファイル名を格納する配列。テスト用の固定値
     @State private var arrayFileNames: [String] = []
-    // アラートの状態を管理
-    @State private var isShowAlert = false
+    // 選択画像を削除するアラートの状態を管理
+    @State private var isShowSelectedDeleteAlert = false
+    // 削除の際に複数選択するためのインデックスをセット
+    @State private var selectedIndexes: Set<Int> = []
     
     var body: some View {
         VStack {
@@ -32,7 +34,8 @@ struct ContentView: View {
                     // 配列内に画像が存在すれば表示
                     if !selectedImages.isEmpty {
                         // 選択された画像を表示
-                        ForEach(selectedImages, id: \.self) { image in
+                        ForEach(selectedImages.indices, id: \.self) { index in
+                            let image = selectedImages[index]
                             PhotosPicker(selection: $selectedItems, selectionBehavior: .ordered) {
                                 Image(uiImage: image)
                                     .resizable()
@@ -41,6 +44,14 @@ struct ContentView: View {
                                     .clipped()
                                     .padding(5)
                             }
+                            // 長押しした際の挙動
+                            .contextMenu(menuItems: {
+                                Button("削除", role: .destructive) {
+                                    // 削除対象のインデックス番号を追加
+                                    selectedIndexes.insert(index)
+                                    isShowSelectedDeleteAlert.toggle()
+                                }
+                            })
                         }
                     }
                     // 新しい画像を選択する
@@ -69,14 +80,6 @@ struct ContentView: View {
             }) {
                 Text("保存")
             }
-            // 削除ボタン
-            Button(action: {
-                // アラートを表示
-                isShowAlert.toggle()
-            }) {
-                Text("すべて削除")
-                    .foregroundColor(.red)
-            }
         }
         // 画面表示時
         .onAppear {
@@ -86,13 +89,16 @@ struct ContentView: View {
             // Core Dataから保存された画像を読み込み、selectedImagesにセット
             loadSavedImages()
         }
-        .alert("削除しますか？", isPresented: $isShowAlert) {
-            // 削除ボタン
-            Button(action: {
+        // 選択画像消去のアラート
+        .alert("削除しますか？", isPresented: $isShowSelectedDeleteAlert) {
+            Button("この画像を削除", role: .destructive) {
+                deleteSelectedImages() // CoreDataの情報を削除
+                checkCoreDataContent() // 削除後にCore Dataの内容を確認
+            }
+            Button("全ての画像を削除", role: .destructive) {
                 deleteAllPhotos() // CoreDataの情報を削除
                 checkCoreDataContent() // 削除後にCore Dataの内容を確認
-            }) {
-                Text("OK")
+                
             }
         }
     }
@@ -101,25 +107,18 @@ struct ContentView: View {
     private func loadSelectedImages(items: [PhotosPickerItem]) async {
         // UIImage型の配列を用意
         var newImages: [UIImage] = []
-        // String型の配列を用意
-        var newFileNames: [String] = []
         
         for item in items {
             // 非同期でアイテムからデータを読み込みます。失敗した場合は次のアイテムに進む
             guard let data = try? await item.loadTransferable(type: Data.self),
                   // 読み込んだデータからUIImageを生成
-                  let uiImage = UIImage(data: data),
-                  // UIImageをファイルとして保存し、ファイル名を取得
-                  /* 上記の処理が失敗した場合 else { continue } で現在のitemの処理をスキップして次のitemに進む。
-                   問題のある項目を安全にスキップし、処理可能な項目のみを扱うことができる */
-                    let fileName = saveImageAndGetFileName(image: uiImage) else { continue }
+                  let uiImage = UIImage(data: data) else { continue }
+            // 生成したUIImage型のデータを配列に格納
             newImages.append(uiImage)
-            newFileNames.append(fileName)
         }
         // 非同期処理の結果をUIの更新に反映させる
         DispatchQueue.main.async {
             self.selectedImages = newImages
-            self.arrayFileNames = newFileNames
         }
     }
     // UIImageをストレージに保存し、ファイル名を返す関数
@@ -154,12 +153,24 @@ struct ContentView: View {
     }
     // 追加ボタン押下した際にデータを保存する関数
     private func addPhotosItem() {
-        // 画像が選択された時に、データを保存する処理を実行
-        if arrayFileNames.isEmpty {
+        
+        // 選択した画像のデータを保存する処理を実行
+        if selectedImages.isEmpty {
             print("画像なし")
         } else {
+            // String型の配列を用意
+            var newFileNames: [String] = []
+            
+            //　UIImage型のデータを取り出す
+            for image in selectedImages {
+                // UIImage型のデータをストレージに保存してファイル名を返却する関数を実行
+                if let unwrappedFileName = saveImageAndGetFileName(image: image) {
+                    // 取得したファイル名をファイル名用の配列に格納
+                    newFileNames.append(unwrappedFileName)
+                }
+            }
             // ファイル名に格納している配列の値を文字列で結合
-            let fileNameString = arrayFileNames.joined(separator: ",")
+            let fileNameString = newFileNames.joined(separator: ",")
             /* 保存ボタンを押した分だけ画像が増えてしまう問題 → 保存ボタンを押すたびに新しいエントリがCoreDataに追加されている
              ①保存前にCoreDataの既存エントリをチェックする
              ②既存エントリがある場合は更新し、ない場合のみ新規作成する */
@@ -196,6 +207,9 @@ struct ContentView: View {
     private func checkCoreDataContent() {
         // 取得したデータの件数を出力
         print("取得したデータの件数: \(fetchedPhotos.count)")
+        if fetchedPhotos.isEmpty {
+            print("CoreDataにファイル名のデータはありません")
+        }
         for photo in fetchedPhotos {
             // 各ファイル名を取り出すため、fileNameアトリビュートの値を分解
             if let fileNames = photo.fileName?.components(separatedBy: ",") {
@@ -216,7 +230,67 @@ struct ContentView: View {
             }
         }
     }
-    // ファイル名を削除する関数
+    // 選択された画像のインデックスを削除する関数
+    private func deleteSelectedImages() {
+        // 配列から要素を削除する際、インデックスがずれるのを防ぐために、インデックスを降順に処理
+        let sortedIndexes = selectedIndexes.sorted(by: >)
+        // 降順で取得したインデックスを取り出す
+        for index in sortedIndexes {
+            // indexが画像の数の範囲内であることをチェック
+            print("削除前の画像数: \(selectedImages.count)")
+            guard index < selectedImages.count else {
+                print("indexが画像の数の範囲外です")
+                // インデックスが範囲外なら次のインデックスのループ処理に進む
+                continue
+            }
+            // 画像削除処理
+            deleteImage(at: index)
+        }
+        // 削除した際に写真ライブラリのアイテムの選択状態を解除するため、selectedItemsも更新
+        // enumerated:PhotosPickerItemの配列にインデックスを付与する
+        selectedItems = selectedItems.enumerated().compactMap { (index, item) in
+            // compactMap:nilを返すと、その要素はPhotosPickerItemの配列に含まれない
+            // 選択したインデックス番号を含んでいるものは削除対象としてnilとして扱い、PhotosPickerItem配列のitemから除外する
+            return selectedIndexes.contains(index) ? nil : item
+        }
+        print("削除後の画像数: \(selectedImages.count)")
+        // 選択をリセット
+           selectedIndexes.removeAll()
+    }
+    // 画像削除をする関数
+    private func deleteImage(at index: Int) {
+        // indexが画像の数の範囲内であることをチェック
+        guard index < selectedImages.count else { return }
+        //　selectedImagesからindexに対応する画像を削除
+        selectedImages.remove(at: index)
+        // Core Dataからファイル名を取得
+        let existingPhoto = fetchedPhotos.first
+        
+        if let photo = existingPhoto {
+            // ファイル名を分割して格納
+            var fileNames = photo.fileName?.components(separatedBy: ",") ?? []
+            // indexがファイル名配列の範囲内であるかチェック
+            if index < fileNames.count {
+                let fileNameToDelete = fileNames[index]
+                // ファイル名を削除
+                fileNames.remove(at: index)
+                // 残ったファイル名を再結合してCore Dataを更新
+                photo.fileName = fileNames.joined(separator: ",")
+                // ストレージから画像ファイルを削除
+                deleteImageFromDocuments(fileName: fileNameToDelete)
+            }
+        }
+
+        // Core Dataの変更を保存
+        do {
+            try viewContext.save()
+            print("\(index + 1)枚目の画像を削除しました: ")
+        } catch {
+            print("画像の削除中にエラーが発生しました: \(error)")
+        }
+    }
+
+    // 全てのファイル名を削除する関数
     private func deleteAllPhotos() {
         // CoreDataの情報を取り出す
         for photo in fetchedPhotos {
@@ -233,6 +307,10 @@ struct ContentView: View {
             try viewContext.save()
             // UIImaege型のデータをすべて削除
             selectedImages.removeAll()
+            // 選択した画像を全て削除
+            selectedItems.removeAll()
+            // 削除用のインデックスをリセット
+            selectedIndexes.removeAll()
             print("すべての画像を削除しました")
         } catch {
             print("画像の削除中にエラーが発生しました: \(error)")

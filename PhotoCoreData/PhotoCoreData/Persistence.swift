@@ -15,7 +15,7 @@ struct PersistenceController {
         let viewContext = result.container.viewContext
         for _ in 0..<10 {
             let newPhotos = Photos(context: viewContext)
-            newPhotos.fileName = ""
+            newPhotos.fileName = "test.png"
         }
         do {
             try viewContext.save()
