@@ -47,9 +47,7 @@ struct TestMapAndAddressView: View {
                 }
             }
             Button(action: {
-                viewModel.addStoreName(viewContext: viewContext)
-                // 保存ボタンを押して住所情報を保存
-                viewModel.addAddress(viewContext: viewContext)
+                viewModel.saveStoreInfo(viewContext: viewContext)
             }) {
                 Text("保存")
             }
