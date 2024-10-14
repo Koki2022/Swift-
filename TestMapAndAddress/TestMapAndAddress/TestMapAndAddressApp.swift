@@ -13,7 +13,7 @@ struct TestMapAndAddressApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TestMapAndAddressView()
+            HomeView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

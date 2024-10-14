@@ -14,6 +14,9 @@
 		03E6637D2CB889D00023BBB2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03E6637C2CB889D00023BBB2 /* Assets.xcassets */; };
 		03E663812CB889D00023BBB2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03E663802CB889D00023BBB2 /* Preview Assets.xcassets */; };
 		03E663882CB88A800023BBB2 /* TestMapAndAddressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E663872CB88A800023BBB2 /* TestMapAndAddressViewModel.swift */; };
+		03F0576F2CBD4F1B00D20360 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F0576E2CBD4F1B00D20360 /* HomeView.swift */; };
+		03F057712CBDA2EA00D20360 /* StoreDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F057702CBDA2EA00D20360 /* StoreDetailView.swift */; };
+		03F057732CBDC99500D20360 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F057722CBDC99500D20360 /* HomeViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +29,9 @@
 		03E6637E2CB889D00023BBB2 /* TestMapAndAddress.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestMapAndAddress.entitlements; sourceTree = "<group>"; };
 		03E663802CB889D00023BBB2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		03E663872CB88A800023BBB2 /* TestMapAndAddressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMapAndAddressViewModel.swift; sourceTree = "<group>"; };
+		03F0576E2CBD4F1B00D20360 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		03F057702CBDA2EA00D20360 /* StoreDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreDetailView.swift; sourceTree = "<group>"; };
+		03F057722CBDC99500D20360 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +66,9 @@
 			children = (
 				03E663732CB889CE0023BBB2 /* TestMapAndAddressApp.swift */,
 				03E663752CB889CE0023BBB2 /* Persistence.swift */,
+				03F057702CBDA2EA00D20360 /* StoreDetailView.swift */,
+				03F0576E2CBD4F1B00D20360 /* HomeView.swift */,
+				03F057722CBDC99500D20360 /* HomeViewModel.swift */,
 				03E6637A2CB889CE0023BBB2 /* TestMapAndAddressView.swift */,
 				03E663872CB88A800023BBB2 /* TestMapAndAddressViewModel.swift */,
 				03E6637C2CB889D00023BBB2 /* Assets.xcassets */,
@@ -148,9 +157,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03F057712CBDA2EA00D20360 /* StoreDetailView.swift in Sources */,
 				03E663792CB889CE0023BBB2 /* TestMapAndAddress.xcdatamodeld in Sources */,
 				03E663742CB889CE0023BBB2 /* TestMapAndAddressApp.swift in Sources */,
+				03F057732CBDC99500D20360 /* HomeViewModel.swift in Sources */,
 				03E6637B2CB889CE0023BBB2 /* TestMapAndAddressView.swift in Sources */,
+				03F0576F2CBD4F1B00D20360 /* HomeView.swift in Sources */,
 				03E663762CB889CE0023BBB2 /* Persistence.swift in Sources */,
 				03E663882CB88A800023BBB2 /* TestMapAndAddressViewModel.swift in Sources */,
 			);
