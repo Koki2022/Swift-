@@ -9,7 +9,8 @@ import SwiftUI
 import CoreData
 
 struct HomeView: View {
-    @FetchRequest(entity: Stores.entity(), sortDescriptors: [])
+    // predicateで初期値を設定
+    @FetchRequest(entity: Stores.entity(), sortDescriptors: [], predicate: (NSPredicate(format: "tabNumber == %@", "0")))
     private var fetchedStores: FetchedResults<Stores>
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject private var viewModel = HomeViewModel()
@@ -27,10 +28,8 @@ struct HomeView: View {
                     .pickerStyle(.segmented)
                     // CoreDataから取得したデータをリスト表示
                     List {
-                        ForEach(fetchedStores.filter { $0.tabNumber == String(tabNumber) }) { store in
-                            NavigationLink(destination: StoreDetailView()) {
-                                Text(store.name ?? "")
-                            }
+                        ForEach(fetchedStores) { store in
+                            Text(store.name ?? "店名なし")
                         }
                     }
                     Button(action: {
@@ -66,6 +65,11 @@ struct HomeView: View {
             // 画面起動時のデータ確認
             .onAppear {
                 viewModel.checkStoreDetailData(fetchedStores: fetchedStores)
+            }
+            // onChangeを使用してfetchedStoresのpredicateを更新
+            .onChange(of: tabNumber) {
+                // tabNumberが変更された際に動的にフィルタリング
+                fetchedStores.nsPredicate = NSPredicate(format: "tabNumber == %@", String(tabNumber))
             }
             .navigationTitle("お店一覧")
         }

@@ -15,8 +15,8 @@ struct PersistenceController {
         let viewContext = result.container.viewContext
         for _ in 0..<10 {
             let newStores = Stores(context: viewContext)
-            newStores.tabNumber = ""
-            newStores.name = ""
+            newStores.tabNumber = "0"
+            newStores.name = "TestStore"
         }
         do {
             try viewContext.save()
