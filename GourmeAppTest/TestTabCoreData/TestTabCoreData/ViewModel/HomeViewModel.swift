@@ -15,11 +15,11 @@ class HomeViewModel: ObservableObject {
         
         for store in fetchedStores {
             let storeName = store.name ?? "名前がありません"
-            let tabNumber = store.tabNumber ?? "タブ番号なし"
-            if tabNumber == "0" {
-                print("店名: \(storeName), タブ番号: \(tabNumber), 行ったリストで管理")
-            } else if tabNumber == "1" {
-                print("店名: \(storeName), タブ番号: \(tabNumber), 気になるリストで管理")
+            let tabNumber = VisitationStatus(rawValue: store.visitationStatus) ?? .none
+            if tabNumber == .visited {
+                print("店名: \(storeName), 訪問状況: \(tabNumber), 行ったリストで管理")
+            } else if tabNumber == .interested {
+                print("店名: \(storeName), 訪問状況: \(tabNumber), 気になるリストで管理")
             }
         }
     }

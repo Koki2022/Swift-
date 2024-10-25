@@ -17,6 +17,7 @@
 		03F057D82CC5DA6900D20360 /* StoreDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F057D72CC5DA6900D20360 /* StoreDetailView.swift */; };
 		03F057DA2CC5DAB400D20360 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F057D92CC5DAB400D20360 /* HomeViewModel.swift */; };
 		03F057DC2CC82BB300D20360 /* SelectedTabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F057DB2CC82BB300D20360 /* SelectedTabViewModel.swift */; };
+		03F057E22CCBA14100D20360 /* VisitationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F057E12CCBA14100D20360 /* VisitationStatus.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		03F057D72CC5DA6900D20360 /* StoreDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreDetailView.swift; sourceTree = "<group>"; };
 		03F057D92CC5DAB400D20360 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		03F057DB2CC82BB300D20360 /* SelectedTabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedTabViewModel.swift; sourceTree = "<group>"; };
+		03F057E12CCBA14100D20360 /* VisitationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitationStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 		03F057C02CC5D25E00D20360 /* TestTabCoreData */ = {
 			isa = PBXGroup;
 			children = (
+				03F057E12CCBA14100D20360 /* VisitationStatus.swift */,
 				03F057DE2CC82BC900D20360 /* View */,
 				03F057DD2CC82BBC00D20360 /* ViewModel */,
 				03F057C12CC5D25E00D20360 /* TestTabCoreDataApp.swift */,
@@ -176,6 +179,7 @@
 				03F057C72CC5D25E00D20360 /* TestTabCoreData.xcdatamodeld in Sources */,
 				03F057DC2CC82BB300D20360 /* SelectedTabViewModel.swift in Sources */,
 				03F057D82CC5DA6900D20360 /* StoreDetailView.swift in Sources */,
+				03F057E22CCBA14100D20360 /* VisitationStatus.swift in Sources */,
 				03F057DA2CC5DAB400D20360 /* HomeViewModel.swift in Sources */,
 				03F057C22CC5D25E00D20360 /* TestTabCoreDataApp.swift in Sources */,
 				03F057D62CC5D81600D20360 /* SelectedTabView.swift in Sources */,

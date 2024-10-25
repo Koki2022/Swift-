@@ -10,18 +10,18 @@ import CoreData
 
 class SelectedTabViewModel: ObservableObject {
     @Published var storeName: String = ""
-    @Published var tabNumber: Int = 0
+    @Published var tabNumber: VisitationStatus = .visited
     // データを確認する関数
     func checkStoreDetailData(fetchedStores: FetchedResults<Stores>) {
         print("CoreDataの件数: \(fetchedStores.count)")
         
         for store in fetchedStores {
             let storeName = store.name ?? "名前がありません"
-            let tabNumber = store.tabNumber ?? "タブ番号なし"
-            if tabNumber == "0" {
-                print("店名: \(storeName), タブ番号: \(tabNumber), 行ったリストで管理")
-            } else if tabNumber == "1" {
-                print("店名: \(storeName), タブ番号: \(tabNumber), 気になるリストで管理")
+            let tabNumber = VisitationStatus(rawValue: store.visitationStatus) ?? .none
+            if tabNumber == .visited {
+                print("店名: \(storeName), 訪問状況: \(tabNumber), 行ったリストで管理")
+            } else if tabNumber == .interested {
+                print("店名: \(storeName), 訪問状況: \(tabNumber), 気になるリストで管理")
             }
         }
     }
@@ -48,7 +48,7 @@ class SelectedTabViewModel: ObservableObject {
             
             // 店舗情報を設定
             store.name = storeName
-            store.tabNumber = String(tabNumber)
+            store.visitationStatus = tabNumber.rawValue
             
             // 変更を保存
             try viewContext.save()
