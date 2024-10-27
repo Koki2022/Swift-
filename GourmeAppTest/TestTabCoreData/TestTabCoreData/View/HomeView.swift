@@ -10,6 +10,7 @@ import CoreData
 
 struct HomeView: View {
     // predicateで初期値を設定
+    // %iで数値の値を検索しフィルタリング
     @FetchRequest(entity: Stores.entity(), sortDescriptors: [], predicate: (NSPredicate(format: "visitationStatus == %i", 0)))
     private var fetchedStores: FetchedResults<Stores>
     @Environment(\.managedObjectContext) private var viewContext

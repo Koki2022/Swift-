@@ -11,5 +11,5 @@ import SwiftUI
 enum VisitationStatus: Int16 {
     case visited = 0
     case interested = 1
-    case none = 3
+    case none = 2
 }
