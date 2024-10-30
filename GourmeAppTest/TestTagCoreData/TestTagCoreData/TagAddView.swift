@@ -20,7 +20,9 @@ struct TagAddView: View {
     // タグボタンのサイズや行または列の要素数をArray文で定義
     private let columns: [GridItem] = Array(Array(repeating: .init(.fixed(120)), count: 3))
     // 各タグボタンを管理する配列。タグ名ごとに選択状態を管理するので構造体で管理
-    @State private var tagButtonDetail: [TagButtonDetail] = []
+    @State private var arrayTagButtonDetail: [TagButtonDetail] = []
+    // CoreDataのタグ名の情報を管理するための配列
+    @State private var arrayTagNames: [String] = []
     // 入力したタグ名を管理する変数
     @State private var tagName: String = ""
     // タグ名入力のアラートを管理する変数
@@ -28,7 +30,7 @@ struct TagAddView: View {
     // タグ名の空文字アラートを管理する変数
     @State private var isEmptyNameVisible: Bool = false
     // タグ削除の際のアラートを管理する変数
-    @State private var isDeleteVisible: Bool = false
+    @State private var isSameNameVisible: Bool = false
     
     var body: some View {
         //  スクロールビューの実装
@@ -74,7 +76,7 @@ struct TagAddView: View {
                             }
                     }
                     // 作成したボタンを実装
-                    ForEach(tagButtonDetail) { tag in
+                    ForEach(arrayTagButtonDetail) { tag in
                         Button(action: {
                             // 長押しで削除
                         }) {
@@ -97,6 +99,7 @@ struct TagAddView: View {
             // 削除ボタン
             Button(action: {
                 // データ全削除
+                deleteAllTag(fetchedTags: fetchedTags, viewContext: viewContext)
             }) {
                 Text("すべて削除")
                     .foregroundColor(.red)
@@ -108,6 +111,7 @@ struct TagAddView: View {
         // 画面表示時
         .onAppear {
             print("TagAddViewView表示")
+            loadTagNames(fetchedTags: fetchedTags)
         }
         // タグ名入力フィールド
         .alert("タグ名を入力してください", isPresented: $isNameVisible) {
@@ -140,51 +144,95 @@ struct TagAddView: View {
         } message: {
             Text("文字を入力してください")
         }
-        // ボタン長押し時のアラート処理
-        .alert("削除しますか？ ", isPresented: $isDeleteVisible) {
-            // キャンセルボタン実装
-            Button("キャンセル", role: .cancel) {
-                // キャンセル実行時の処理
-            }
-            // 削除ボタン実装
-            Button("削除", role: .destructive) {
+        // 同じタグ名が存在する場合のアラート
+        .alert("同じタグ名が既に存在します", isPresented: $isSameNameVisible) {
+            // OKボタン実装
+            Button("OK", role: .cancel) {
                 // タグを削除する処理
-                
             }
-            // アラートポップアップ表示の際の警告
-        } message: {
-            Text("この操作は取り消しできません")
         }
     }
-    // 既存のタグ名がデータにないかチェックして、重複しなければcoredataにタグ名を保存
+    // 画面表示時にcoredataからタグ情報を読み取る
+    func loadTagNames(fetchedTags: FetchedResults<Tags>) {
+        print("loadTagNames実行前")
+        var newArrayTagButtonInfo: [TagButtonDetail] = []
+        var newArrayTagNames: [String] = []
+        
+        // CoreDataからタグ名を管理するデータを取得
+        for tag in fetchedTags {
+            // 配列のタグ名を分解する
+            if let tagNames = tag.name?.components(separatedBy: ",") {
+                // 分解したタグ名を取り出す
+                for tagName in tagNames {
+                    // タグ名が存在、またタグ名の配列と取り出したタグ名が重複していなければnewArrayTagButtonInfoとnewArrayTagNamesに追加
+                    if !tagName.isEmpty && !newArrayTagNames.contains(tagName) {
+                        newArrayTagButtonInfo.append(TagButtonDetail(name: tagName))
+                        newArrayTagNames.append(tagName)
+                    }
+                }
+            }
+        }
+        // UIを更新
+        arrayTagNames = newArrayTagNames
+        arrayTagButtonDetail = newArrayTagButtonInfo
+        print("loadTagNames実行後: \(arrayTagButtonDetail)")
+    }
+    // タグ名をCoreDataに登録し、新しいタグボタンを作成するための関数
     func addTagNames(tagName: String) {
+        // CoreDataからTagsエンティティの全てのインスタンスを取得する
         let fetchRequest: NSFetchRequest<Tags> = Tags.fetchRequest()
+        // nameアトリビュートがtagNameの値と完全に一致するエンティティのみを取得する
         fetchRequest.predicate = NSPredicate(format: "name == %@", tagName)
         
-        // CoreDataへ保存
+        // CoreDataへ保存する際の処理
         do {
             // 設定したfetchRequestを使用してデータベースからデータを取得
             let existingTags = try viewContext.fetch(fetchRequest)
-            let tag: Tags
             
-            // 既存の店舗が見つかった場合、更新する。
-            if let existingTag = existingTags.first {
-                tag = existingTag
+            // 既存のタグが見つかった場合は、新しいタグを作成しない
+            if !arrayTagNames.contains(tagName) && existingTags.isEmpty  {
+                // 新しいエントリを作成してデータを保存
+                let newTag = Tags(context: viewContext)
+                // 配列にタグ名を格納
+                arrayTagNames.append(tagName)
+                print(arrayTagNames)
+                // タグ名を格納している配列の値を文字列で結合
+                let tagNameString = arrayTagNames.joined(separator: ",")
+                print("CoreData登録前のタグ名: \(tagNameString)")
+                // 結合したタグ名をTagsEntityのnameAttributeに格納
+                newTag.name = tagNameString
+                // 保存
+                try viewContext.save()
+                print("CoreData登録後のタグ名: \(tagNameString)")
+                // 新しいタグボタンを生成するためにタグ名をtagButtonDetail配列に追加
+                arrayTagButtonDetail.append(TagButtonDetail(name: tagName))
             } else {
-                tag = Tags(context: viewContext)
+                isSameNameVisible.toggle()
+                print("タグ '\(tagName)' は既に存在します。")
             }
-            print("CoreData登録前のタグ名: \(tagName)")
-            // タグ名をTagsEntityのnameAttributeに格納
-            tag.name = tagName
-            // 保存
-            try viewContext.save()
-            // 新しいタグボタンを生成するためにタグ名をtagButtonDetail配列に追加
-            tagButtonDetail.append(TagButtonDetail(name: tagName))
-            print("CoreData登録後のタグ名: \(tagName)")
         } catch {
             print("ERROR \(error)")
         }
     }
+    // データをすべて削除する関数
+    func deleteAllTag(fetchedTags: FetchedResults<Tags>, viewContext: NSManagedObjectContext) {
+        // CoreDataの情報を取り出す
+        for tag in fetchedTags {
+            viewContext.delete(tag)
+        }
+        // 変更を保存
+        do {
+            try viewContext.save()
+            print("全てのタグを削除しました")
+            // タグ名の配列を削除
+            arrayTagNames.removeAll()
+            // ボタンを削除するために配列も削除
+            arrayTagButtonDetail.removeAll()
+        } catch {
+            print("タグの削除中にエラーが発生しました: \(error)")
+        }
+    }
+    
 }
 
 #Preview {
