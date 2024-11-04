@@ -4,7 +4,6 @@
         <attribute name="selectedTag" optional="YES" attributeType="String"/>
     </entity>
     <entity name="Tags" representedClassName="Tags" syncable="YES" codeGenerationType="class">
-        <attribute name="isSelected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
     </entity>
 </model>

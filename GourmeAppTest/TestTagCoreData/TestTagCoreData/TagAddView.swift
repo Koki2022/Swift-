@@ -31,6 +31,9 @@ struct TagAddView: View {
     @State private var isEmptyNameVisible: Bool = false
     // タグ削除の際のアラートを管理する変数
     @State private var isSameNameVisible: Bool = false
+    // 選択されたタグを格納するための配列
+    @Binding var selectedTags: [String]
+    
     
     var body: some View {
         //  スクロールビューの実装
@@ -42,8 +45,6 @@ struct TagAddView: View {
                 HStack {
                     Spacer()
                     Button(action: {
-                        // 選択されたタグを更新
-                        
                         // viewを閉じて一覧画面へ遷移
                         dismiss()
                     }) {
@@ -78,7 +79,20 @@ struct TagAddView: View {
                     // 作成したボタンを実装
                     ForEach(arrayTagButtonDetail) { tag in
                         Button(action: {
-                            // 長押しで削除
+                            // arrayTagButtonDetail配列の中で{ $0.id == tag.id }がtrueを返す最初の要素のインデックスを探す
+                            if let index = arrayTagButtonDetail.firstIndex(where: { $0.id == tag.id }) {
+                                // タップしたタグの選択状態を変更
+                                arrayTagButtonDetail[index].isSelected.toggle()
+                                print("タップしたタグの情報とtagIDの確認: \(arrayTagButtonDetail[index]), \(tag.id)")
+                               
+                                if arrayTagButtonDetail[index].isSelected {
+                                    // 選択状態なら選択したタグの配列に格納
+                                    selectedTags.append(tag.name)
+                                } else {
+                                    // 再タップで選択状態を解除(falseに)するため配列から削除
+                                    selectedTags.removeAll { $0 == tag.name }
+                                }
+                            }
                         }) {
                             Text("# \(tag.name)")
                                 .frame(width: 110, height: 45)
@@ -90,7 +104,8 @@ struct TagAddView: View {
                                     // 黒縁にする
                                         .stroke(Color.black)
                                 }
-                                .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
+                            // タグの選択状態がtrueの場合は背景色が黄色になる
+                                .background(RoundedRectangle(cornerRadius: 10).fill(tag.isSelected ? Color.yellow: Color.white))
                                 .padding(10)
                         }
                     }
@@ -111,7 +126,13 @@ struct TagAddView: View {
         // 画面表示時
         .onAppear {
             print("TagAddViewView表示")
+            // 作成したタグの名前を読み取る
             loadTagNames(fetchedTags: fetchedTags)
+            // enumerated() で配列の要素を更新
+            for (index, tag) in arrayTagButtonDetail.enumerated() {
+                // selectedTagsにあるタグは選択状態をtrueにする
+                arrayTagButtonDetail[index].isSelected = selectedTags.contains(tag.name)
+            }
         }
         // タグ名入力フィールド
         .alert("タグ名を入力してください", isPresented: $isNameVisible) {
@@ -223,11 +244,13 @@ struct TagAddView: View {
         // 変更を保存
         do {
             try viewContext.save()
-            print("全てのタグを削除しました")
+            print("TagsEntityの全てのデータを削除しました")
             // タグ名の配列を削除
             arrayTagNames.removeAll()
             // ボタンを削除するために配列も削除
             arrayTagButtonDetail.removeAll()
+            // 選択したタグも削除
+            selectedTags.removeAll()
         } catch {
             print("タグの削除中にエラーが発生しました: \(error)")
         }
@@ -236,5 +259,5 @@ struct TagAddView: View {
 }
 
 #Preview {
-    TagAddView()
+    TagAddView(selectedTags: .constant([]))
 }

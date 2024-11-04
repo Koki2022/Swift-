@@ -16,7 +16,6 @@ struct PersistenceController {
         for _ in 0..<10 {
             let newTags = Tags(context: viewContext)
             newTags.name = "TagTest"
-            newTags.isSelected = false
             
             let newStores = Stores(context: viewContext)
             newStores.selectedTag = ""
