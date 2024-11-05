@@ -23,8 +23,6 @@ struct RegistrationView: View {
     @State private var isTagSelectionVisible: Bool = false
     // 選択されたタグを格納するための配列
     @State private var selectedTags: [String] = []
-    // CoreDataの選択したタグ名の情報を管理するための配列
-    @State private var arraySelectedTag: [String] = []
     
     var body: some View {
         NavigationStack {
@@ -115,31 +113,23 @@ struct RegistrationView: View {
     // 画面表示時にcoredataから選択したタグを読み取る
     func loadSelectedTags(fetchedStores: FetchedResults<Stores>) {
         print("loadSelectedTags実行前")
-        // 空の配列用意
-        var newArraySelectedTags: [String] = []
         // CoreDataからタグデータを取得
         for store in fetchedStores {
             // 配列のタグ名をを分解
             if let tags = store.selectedTag?.components(separatedBy: ",") {
                // タグを取り出す
                 for tag in tags {
-                    newArraySelectedTags.append(tag)
+                    selectedTags.append(tag)
                 }
             }
         }
         // 取り出したデータ
-        print("取り出したデータ: \(newArraySelectedTags)")
-        // selectedTagに取り出したタグを格納
-        selectedTags = newArraySelectedTags
+        print("取り出したデータ: \(selectedTags)")
     }
     // 選択したタグを保存する関数
     func addSelectedTags(viewContext: NSManagedObjectContext) {
-        // 配列に選択したタグ名を格納
-        for tag in selectedTags {
-            arraySelectedTag.append(tag)
-        }
         // タグ名を結合
-        let tagNameString = arraySelectedTag.joined(separator: ",")
+        let tagNameString = selectedTags.joined(separator: ",")
         print("結合後の選択したタグ名: \(tagNameString)")
         // 既存のエントリをチェックして、ボタン押下の度に新エントリが作成されるのを防ぐ
         let existingStore = fetchedStores.first
@@ -172,8 +162,6 @@ struct RegistrationView: View {
             try viewContext.save()
             print("StoresEntityのデータを全て削除しました")
             // 選択したタグの配列を削除
-            arraySelectedTag.removeAll()
-            // 選択したタグも削除
             selectedTags.removeAll()
         } catch {
             print("タグの削除中にエラーが発生しました: \(error)")
