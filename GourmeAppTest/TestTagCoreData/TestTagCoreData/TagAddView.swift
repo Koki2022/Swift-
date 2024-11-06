@@ -19,20 +19,24 @@ struct TagAddView: View {
     @Environment(\.managedObjectContext) private var viewContext
     // タグボタンのサイズや行または列の要素数をArray文で定義
     private let columns: [GridItem] = Array(Array(repeating: .init(.fixed(120)), count: 3))
-    // 各タグボタンを管理する配列。タグ名ごとに選択状態を管理するので構造体で管理
-    @State private var arrayTagButtonDetail: [TagButtonDetail] = []
-    // CoreDataのタグ名の情報を管理するための配列
-    @State private var arrayTagNames: [String] = []
-    // 入力したタグ名を管理する変数
-    @State private var tagName: String = ""
+    // 選択されたタグを格納するための配列
+    @Binding var selectedTags: [String]
     // タグ名入力のアラートを管理する変数
     @State private var isNameVisible: Bool = false
+    // 各タグボタンを管理する配列。タグ名ごとに選択状態を管理するので構造体で管理
+    @State private var arrayTagButtonDetail: [TagButtonDetail] = []
+    // 削除対象のタグ名を管理する変数
+    @State private var tagToDelete: String?
+    // タグ削除の際のアラートを管理する変数
+    @State private var isDeleteNameVisible = false
+    // 入力したタグ名を管理する変数
+    @State private var tagName: String = ""
     // タグ名の空文字アラートを管理する変数
     @State private var isEmptyNameVisible: Bool = false
     // タグ削除の際のアラートを管理する変数
     @State private var isSameNameVisible: Bool = false
-    // 選択されたタグを格納するための配列
-    @Binding var selectedTags: [String]
+    // CoreDataのタグ名の情報を管理するための配列
+    @State private var arrayTagNames: [String] = []
     
     
     var body: some View {
@@ -84,7 +88,7 @@ struct TagAddView: View {
                                 // タップしたタグの選択状態を変更
                                 arrayTagButtonDetail[index].isSelected.toggle()
                                 print("タップしたタグの情報とtagIDの確認: \(arrayTagButtonDetail[index]), \(tag.id)")
-                               
+                                
                                 if arrayTagButtonDetail[index].isSelected {
                                     // 選択状態なら選択したタグの配列に格納
                                     selectedTags.append(tag.name)
@@ -107,6 +111,17 @@ struct TagAddView: View {
                             // タグの選択状態がtrueの場合は背景色が黄色になる
                                 .background(RoundedRectangle(cornerRadius: 10).fill(tag.isSelected ? Color.yellow: Color.white))
                                 .padding(10)
+                        }
+                        // 長押しした際の処理
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                // 削除対象のタグ名を一時的に保持するために使用
+                                tagToDelete = tag.name
+                                // アラート表示
+                                isDeleteNameVisible.toggle()
+                            } label: {
+                                Label("削除", systemImage: "trash")
+                            }
                         }
                     }
                 }
@@ -172,6 +187,16 @@ struct TagAddView: View {
                 // タグを削除する処理
             }
         }
+        // ボタン長押し時のアラート処理
+        .alert("タグを削除", isPresented: $isDeleteNameVisible, presenting: tagToDelete) { tagName in
+            Button("削除", role: .destructive) {
+                // タグ削除
+                deleteTag(tagName: tagName)
+            }
+            Button("キャンセル", role: .cancel) {}
+        } message: { tagName in
+            Text("'\(tagName)'を削除してもよろしいですか？")
+        }
     }
     // 画面表示時にcoredataからタグ情報を読み取る
     func loadTagNames(fetchedTags: FetchedResults<Tags>) {
@@ -233,6 +258,31 @@ struct TagAddView: View {
             }
         } catch {
             print("ERROR \(error)")
+        }
+    }
+    func deleteTag(tagName: String) {
+        // CoreDataからタグを削除
+        for tag in fetchedTags {
+            // タグ名を分割
+            if let names = tag.name?.components(separatedBy: ",") {
+                // $0は配列の各要素。削除対象のタグ名ではない他の要素で値を結合する
+                let updatedNames = names.filter { $0 != tagName }
+                tag.name = updatedNames.joined(separator: ",")
+            }
+        }
+        
+        // それぞれtagNameと一致する配列の要素を削除する
+        arrayTagButtonDetail.removeAll { $0.name == tagName }
+        arrayTagNames.removeAll { $0 == tagName }
+        selectedTags.removeAll { $0 == tagName }
+        
+        // 変更を保存
+        do {
+            try viewContext.save()
+            print("タグ '\(tagName)' を削除しました")
+            print("削除後のタグ確認: \(arrayTagNames)")
+        } catch {
+            print("タグの削除中にエラーが発生しました: \(error)")
         }
     }
     // データをすべて削除する関数
