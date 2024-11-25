@@ -80,7 +80,6 @@ struct HomeView: View {
             // onChangeを使用してfetchedStoresのpredicateを更新
             .onChange(of: tabNumber) {
                 // tabNumberが変更された際に動的にフィルタリング
-                
                 fetchedStores.nsPredicate = NSPredicate(format: "visitationStatus == %i", tabNumber.rawValue)
             }
             .navigationTitle("お店一覧")
