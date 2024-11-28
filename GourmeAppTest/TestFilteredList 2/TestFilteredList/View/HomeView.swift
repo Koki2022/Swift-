@@ -119,7 +119,7 @@ struct HomeView: View {
                 } else {
                     List {
                         // ユーザが選択したタグに応じてフィルタリングされたリストを表示
-                        ForEach(fetchedStores) { store in
+                        ForEach(viewModel.filteredStores) { store in
                             HStack {
                                 Button(action: {
                                     // お店情報画面へ遷移
@@ -132,8 +132,16 @@ struct HomeView: View {
                             }
                         }
                     }
-                    
                 }
+            }
+            // 画面表示の際にデータを格納
+            .onAppear {
+                // 取得したデータ件数
+                print("HomeView表示時のfetchedStores件数: \(fetchedStores.count)")
+                // 登録したデータを渡す
+                viewModel.coreDataFetchedStores = Array(fetchedStores)
+                // 選択したタグの情報を渡す
+                viewModel.userSelectedTags = selectedTags
             }
             // onChangeを使用してfetchedStoresのpredicateを更新
             .onChange(of: viewModel.visitationStatus) {
