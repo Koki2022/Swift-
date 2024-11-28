@@ -119,7 +119,7 @@ struct HomeView: View {
                 } else {
                     List {
                         // ユーザが選択したタグに応じてフィルタリングされたリストを表示
-                        ForEach(viewModel.filteredStores) { store in
+                        ForEach(fetchedStores) { store in
                             HStack {
                                 Button(action: {
                                     // お店情報画面へ遷移
@@ -135,23 +135,10 @@ struct HomeView: View {
                     
                 }
             }
-          
             // onChangeを使用してfetchedStoresのpredicateを更新
             .onChange(of: viewModel.visitationStatus) {
                 // visitationStatusが変更された際に動的にフィルタリング
                 fetchedStores.nsPredicate = NSPredicate(format: "visitationStatus == %i", viewModel.visitationStatus.rawValue)
-            }
-            // タグ選択後、そのタグを含んでいるお店リストを表示するためのコードを実装
-            .onAppear {
-                // 画面表示時にCoreDataから取得したお店データをセット
-                viewModel.coreDataFetchedStores = Array(fetchedStores)
-                // ホーム画面で選択したタグを処理する用のuserSelectedTagsにセット
-                viewModel.userSelectedTags = selectedTags
-            }
-            // selectedTagsの値が変更された時に実行
-            .onChange(of: selectedTags) { _, newTags in
-                // 新しいタグをセット
-                viewModel.userSelectedTags = newTags
             }
             // 遷移先のビューをそれぞれ定義
             .navigationDestination(for: HomeNavigatePath.self) { value in
