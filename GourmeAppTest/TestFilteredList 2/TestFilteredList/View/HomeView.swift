@@ -135,18 +135,25 @@ struct HomeView: View {
                 }
             }
             // 画面表示の際にデータを格納
-            .onAppear {
-                // 取得したデータ件数
-                print("HomeView表示時のfetchedStores件数: \(fetchedStores.count)")
-                // 登録したデータを渡す
-                viewModel.coreDataFetchedStores = Array(fetchedStores)
-                // 選択したタグの情報を渡す
-                viewModel.userSelectedTags = selectedTags
+            .onAppear(perform: updateViewModelData)
+            /* StoreRegistrationViewシートを閉じてもonAppearは呼び出されないので、isStoreRegistrationVisibleの値を監視してシート非表示(false)の際,userSelectedTagsとcoreDataFetchedStoresにデータを渡す */
+            .onChange(of: isStoreRegistrationVisible) { _, isVisible in
+                if !isVisible {
+                    print("StoreRegistrationViewから遷移完了")
+                    //
+                    updateViewModelData()
+                }
+            } 
+            // 選択しているタグの値を監視
+            .onChange(of: selectedTags) { _, newTags in
+                print("タグ選択後の値を確認: \(newTags)")
+                updateViewModelData()
             }
             // onChangeを使用してfetchedStoresのpredicateを更新
-            .onChange(of: viewModel.visitationStatus) {
+            .onChange(of: viewModel.visitationStatus) { _, newStatus in
                 // visitationStatusが変更された際に動的にフィルタリング
-                fetchedStores.nsPredicate = NSPredicate(format: "visitationStatus == %i", viewModel.visitationStatus.rawValue)
+                fetchedStores.nsPredicate = NSPredicate(format: "visitationStatus == %i", newStatus.rawValue)
+                updateViewModelData()
             }
             // 遷移先のビューをそれぞれ定義
             .navigationDestination(for: HomeNavigatePath.self) { value in
@@ -197,7 +204,12 @@ struct HomeView: View {
             StoreRegistrationView()
         }
     }
-    // 画面表示時に
+    // ViewModelのデータを更新する関数
+    func updateViewModelData() {
+        viewModel.coreDataFetchedStores = Array(fetchedStores)
+        viewModel.userSelectedTags = selectedTags
+        print("fetchedStores件数: \(fetchedStores.count)")
+    }
 }
 
 #Preview {
